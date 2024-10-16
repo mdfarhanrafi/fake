@@ -5,13 +5,24 @@ import { useRouter } from "next/navigation"
 export default function Instructor(){
     const { auth, loading } = useContext(AuthContext)
     const role = auth?.user?.role
-    console.log(role) 
-    console.log(auth.Authenticate)
+    const router = useRouter()
+    if (loading) return <div>Loading...</div>
+    if (!auth) {
+        router.push("/auth")
+        return null
+    }
+    if (role !== "Admin") {
+        router.push("/")
+        return null
+    }
+    console.log(auth)
+
     return (
         <div>
-           {
-           auth.Authenticate ? <p>I am at Instructor</p> : useRouter().push('/auth')      
-           }
+            {
+                auth.user.role === "Admin" && auth.Authenticate ? <div>Welcome {auth.user.username}</div> : router.push("/")
+            }
+            <h1>Instructor Page</h1>
         </div>
     )
 }
